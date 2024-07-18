@@ -8,13 +8,17 @@ type ElementType = "script" | "stylesheet"
 
 export class HeadDetails {
   readonly detailsByOuterHTML: ElementDetailMap
+  readonly nonce: string | null
 
   static fromHeadElement(headElement: HTMLHeadElement | null): HeadDetails {
     const children = headElement ? array(headElement.children) : []
-    return new this(children)
+    const nonce = headElement!.querySelector('meta[name="csp-nonce"]')!.getAttribute('content')
+
+    return new this(children, nonce)
   }
 
-  constructor(children: Element[]) {
+  constructor(children: Element[], nonce: string | null = null) {
+    this.nonce = nonce
     this.detailsByOuterHTML = children.reduce((result, element) => {
       const { outerHTML } = element
       const details: ElementDetails
@@ -36,9 +40,15 @@ export class HeadDetails {
   }
 
   getTrackedElementSignature(): string {
-    return Object.keys(this.detailsByOuterHTML)
+    let result = Object.keys(this.detailsByOuterHTML)
       .filter(outerHTML => this.detailsByOuterHTML[outerHTML].tracked)
       .join("")
+
+    if (this.nonce) {
+      result = result.replace(/nonce=""/, `nonce="${this.nonce}"`)
+    }
+
+    return result
   }
 
   getScriptElementsNotInDetails(headDetails: HeadDetails) {
