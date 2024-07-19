@@ -1,6 +1,8 @@
-# Turbolinks is no longer under active development
+# Turbolinks with Content Security Policy headers support
 
-Please note that Turbolinks is no longer under active development. It has been superseded by a new framework called [Turbo](https://github.com/hotwired/turbo), which is part of the [Hotwire](https://hotwire.dev) umbrella.
+This is fork of Turbolinks that is no longer under active development that adds support for Content Security Policy headers. It addresses following problems
+
+1. Incorrect reload on page access if `data-turbolinks-track="reload"` is used (https://github.com/turbolinks/turbolinks/issues/464)
 
 # Turbolinks
 
