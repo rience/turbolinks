@@ -102,8 +102,12 @@ export class ProgressBar {
 
   createStylesheetElement() {
     const element = document.createElement("style")
+    const nonce = document.querySelector('meta[name="csp-nonce"]')!.getAttribute('content')
     element.type = "text/css"
     element.textContent = ProgressBar.defaultCSS
+    if (nonce) {
+      element.setAttribute('nonce', nonce)
+    }
     return element
   }
 
