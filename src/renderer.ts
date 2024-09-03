@@ -37,6 +37,13 @@ export abstract class Renderer {
 
 function copyElementAttributes(destinationElement: Element, sourceElement: Element) {
   for (const { name, value } of array(sourceElement.attributes)) {
-    destinationElement.setAttribute(name, value)
+    if (name == "nonce") {
+      const nonce = document.querySelector('meta[name="csp-nonce"]')!.getAttribute('content')
+      if (nonce) {
+        destinationElement.setAttribute('nonce', nonce)
+      }
+    } else {
+      destinationElement.setAttribute(name, value)
+    }
   }
 }
